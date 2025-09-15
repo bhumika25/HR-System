@@ -11,11 +11,11 @@
     "db:seed": "node prisma/seed.js",
     "db:reset": "npx prisma migrate reset",
     "db:studio": "npx prisma studio",
-    "docker:up": "cd docker && docker-compose up -d",
-    "docker:down": "cd docker && docker-compose down",
-    "docker:logs": "cd docker && docker-compose logs -f",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
     "docker:restart": "npm run docker:down && npm run docker:up",
-    "setup": "npm run docker:up && sleep 10 && npm run db:generate && npm run db:migrate && npm run db:seed"
+    "setup": "npm run docker:up && npm run db:generate && npm run db:migrate && npm run db:seed"
   },
   "keywords": [],
   "author": "",
