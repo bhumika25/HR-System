@@ -11,7 +11,7 @@ export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -30,14 +30,13 @@ export default function EmployeesPage() {
     try {
       const response = await createEmployee(employeeData);
       const newEmployee: Employee = 'employee' in response ? response.employee : response;
-      setEmployees(prev => [...prev, newEmployee]);
+      setEmployees(prev => [newEmployee, ...prev]);
       alert('Employee added successfully');
     } catch (err: any) {
       console.error('Failed to add employee:', err);
       alert(err?.error || 'Failed to add employee');
     }
   };
-
 
   const handleEditEmployee = (employee: Employee) => {
     setEditingEmployee(employee);
@@ -50,7 +49,6 @@ export default function EmployeesPage() {
     if (!editingEmployee) return;
 
     try {
-
       const response = await updateEmployee(editingEmployee.id, employeeData);
       const updatedEmployee: Employee = 'employee' in response ? response.employee : response;
 
@@ -58,7 +56,6 @@ export default function EmployeesPage() {
         prev.map(emp => (emp.id === updatedEmployee.id ? updatedEmployee : emp))
       );
 
-      // Close modal
       setEditingEmployee(null);
       setIsEditModalOpen(false);
 
@@ -74,7 +71,6 @@ export default function EmployeesPage() {
 
     try {
       await deleteEmployee(id);
-
       setEmployees(prev => prev.filter(emp => emp.id !== id));
       alert('Employee deleted successfully');
     } catch (err: any) {
@@ -89,8 +85,8 @@ export default function EmployeesPage() {
   };
 
   useEffect(() => {
-    fetchEmployees()
-  }, [currentPage])
+    fetchEmployees();
+  }, [currentPage]);
 
   return (
     <div className="space-y-8">
@@ -103,8 +99,8 @@ export default function EmployeesPage() {
       <EmployeeForm onSubmit={handleAddEmployee} />
 
       {/* Employees Table */}
-      {
-        !error && <div>
+      {!error && (
+        <div>
           <h2 className="text-xl font-semibold mb-4">All Employees</h2>
           <EmployeeTable
             employees={employees}
@@ -115,7 +111,7 @@ export default function EmployeesPage() {
             onPageChange={setCurrentPage}
           />
         </div>
-      }
+      )}
 
       {/* Edit Modal */}
       {isEditModalOpen && editingEmployee && (
@@ -124,7 +120,6 @@ export default function EmployeesPage() {
           onClose={handleCancelEdit}
           title="Edit Employee"
         >
-
           <EmployeeForm
             employee={editingEmployee}
             onSubmit={handleUpdateEmployee}
