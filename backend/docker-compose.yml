@@ -1,0 +1,33 @@
+# docker/docker-compose.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hr_postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hr_admin
+      POSTGRES_PASSWORD: hr_secure_password_2024
+      POSTGRES_DB: hr_management_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - hr_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hr_admin -d hr_management_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  hr_network:
+    driver: bridge
